@@ -28,14 +28,14 @@ function createSlots(itemList){
 
     var cssSelector = anime({
       targets: 'machine',
-      scale: 1.6,
+      scale: 1.5,
       duration: 10000,
       delay: 2000,
       easing: 'linear'
     });
 
     for (let i = 0; i < wheels.length; i++){
-      let degreesToMove = Math.floor( 2 * slideCount + slideCount) * slideAngle; 
+      let degreesToMove = Math.floor( Math.random() * slideCount + slideCount) * slideAngle; 
       wheelsEls[i].rotation -= degreesToMove;
       wheelsEls[i].setAttribute('style', 'transform: translateZ(-82vmax) rotateY('+wheelsEls[i].rotation+'deg)  ');
       checkChoosen(wheelsEls[i].rotation)
@@ -68,10 +68,11 @@ function createSlots(itemList){
     }
   }
 
-  const checkChoosen = function(deg) {
+  const checkChoosen = function(deg, defAngle) {
+    const angle = defAngle === 180 ? 360 : 180;
     const data = $('slide').map((index,item) => {
       const raw = $(item).data('deg')
-      if ( ((deg % -360 ) + 180 + 36) % 180 === +raw) {
+      if ( deg % (angle * -1) === +raw) {
         console.log($(item).data('team'))
         return $(item).data('team')
       } else {
