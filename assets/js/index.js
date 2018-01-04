@@ -1,87 +1,105 @@
+const LOCAL_STORAGE_KEY = 'ywc-15-random'
+// Create Machine Element
 const machineEl = document.createElement('machine')
-const wheelCount = 1;
-const fib = [1,1,1,1,1,1,1,1,1,1]
-const wheels = Array(wheelCount)
 
-let Item = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+const storage = window.localStorage
+const saved = storage.getItem(LOCAL_STORAGE_KEY)
 
-createSlots(Item)
+let items
 
-function reset(item) {
-  if (Item.indexOf(item) !== -1 ) {
-    Item.splice(Item.indexOf(item), 1 );
-    fib.pop()
-    console.log(fib.length, Item.length)
-    $('machine').html('')
-    createSlots(Item)
-  }
+// if has save in localStorage
+if (saved) {
+  items = saved.split(',');
+} else {
+  items = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+  storage.setItem(LOCAL_STORAGE_KEY, items.join(','))
 }
 
-function createSlots(itemList){
-  const slideCount = fib.reduce((a,b)=> a + b, 0);
-  const slideAngle = 360 / slideCount;
-  const defAngle = fib.length % 2 === 0 ? 180 : 360
-  
-  const play = function(){
-    let wheelsEls = $('wheel')
-    wheelsEls.addClass('active')
+// Create wheel
+// Generate slides
+  // Set angle
+  // Set rotatation
+// Append element to body
 
-    var cssSelector = anime({
-      targets: 'machine',
-      scale: 1.5,
-      duration: 10000,
-      delay: 2000,
-      easing: 'linear'
-    });
-
-    for (let i = 0; i < wheels.length; i++){
-      let degreesToMove = Math.floor( Math.random() * slideCount + slideCount) * slideAngle; 
-      wheelsEls[i].rotation -= degreesToMove;
-      wheelsEls[i].setAttribute('style', 'transform: translateZ(-82vmax) rotateY('+wheelsEls[i].rotation+'deg)  ');
-      checkChoosen(wheelsEls[i].rotation)
-    }
-  };
-
-  document.body.addEventListener('click', play)
-
-  for (let wheel of wheels) {
-    let wheelEl = document.createElement('wheel')
-    wheelEl.rotation = 0;
-    wheel = new Array(slideCount)
-    machineEl.appendChild(wheelEl)
-    let enjiIndex = 0;
-    let slideIndex = 0
-    for (let enji of itemList){
-      let enjiCount = fib[enjiIndex]
-      enjiIndex++
-      while (enjiCount > 0){
-        let slideEl = document.createElement('slide')
-        slideEl.classList.add('enji')
-        slideEl.setAttribute("style", "transform: rotateY(" + (slideIndex * slideAngle - defAngle) + "deg) translateZ(80vmax) ;")
-        slideEl.setAttribute("data-deg", slideIndex * slideAngle - defAngle)
-        slideEl.setAttribute("data-team", enji)
-        slideEl.textContent = enji;
-        wheelEl.appendChild(slideEl);
-        enjiCount--
-        slideIndex++
-      }
-    }
-  }
-
-  const checkChoosen = function(deg, defAngle) {
-    const angle = defAngle === 180 ? 360 : 180;
-    const data = $('slide').map((index,item) => {
-      const raw = $(item).data('deg')
-      if ( deg % (angle * -1) === +raw) {
-        console.log($(item).data('team'))
-        return $(item).data('team')
-      } else {
-        console.log('none')
-      }
-    })
-  }
-  
-  $('body').append(machineEl)
+// create Wheel
+function createWheel() {
+  const wheelEl = document.createElement('wheel')
+  return wheelEl
 }
 
+function random() {
+  return Math.floor(Math.random() * ((items.length - 1) - 0 + 1)) + 0
+}
 
+function beginRandom() {
+  // const slideNodes = $('wheel')[0].children;
+  // for (let i = 0 ; i < slideNodes.length ; i += 1) {
+  //   console.log(slideNodes[i].getAttribute('data-deg'));
+
+  //   const style = `transform: rotateY(${degree}deg)
+  //   translateZ(80vmax);`;
+  //   slideNodes[i].setAttribute('style', style)
+  // }
+}
+
+const slides = {};
+
+function getTargetDegree(index) {
+  return slides[Object.keys(slides)[index]] 
+}
+
+function getSpin() {
+  const amountRounds = 3
+  const degree = 360 * amountRounds
+
+  return degree + getTargetDegree(random())
+}
+
+function setWheelRotate(wheel, degree) {
+  const style = `transform: rotateY(${-degree}deg)
+  translateZ(-82vmax);`
+
+  wheel.setAttribute('style', style)
+}
+
+// Create Slide
+function createSlide(index, angle, team) {
+  let slideEl = document.createElement('slide')
+  const degree = index * angle
+
+  slideEl.classList.add('character')
+
+  Object.assign(slides, {
+    [team]: degree,
+  })
+
+  const style = `transform: rotateY(${degree}deg)
+  translateZ(80vmax);`
+
+  // Set slide element attribute
+  slideEl.setAttribute('style', style)
+  slideEl.setAttribute('data-deg', degree)
+  slideEl.setAttribute('data-team', team)
+  // Set slide text context
+  slideEl.textContent = team
+  return slideEl
+}
+
+// Main code
+(() => {
+  const wheel = createWheel()
+  // console.log(random())
+  const anglePerSlide = 360 / items.length
+
+  items.forEach((item, index) => {
+    const slide = createSlide(index, anglePerSlide, item)
+    wheel.appendChild(slide);
+  })
+
+  machineEl.appendChild(wheel)
+
+  setWheelRotate(wheel, getSpin())
+
+  document.body.appendChild(machineEl)
+  document.body.addEventListener('click', beginRandom)
+})()
