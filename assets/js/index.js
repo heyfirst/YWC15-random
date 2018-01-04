@@ -25,9 +25,14 @@ function random() {
   return Math.floor(Math.random() * ((items.length - 1) - 0 + 1)) + 0
 }
 
-const beginRandom = () => {
+const beginRandom = (isFirst = false) => {
   hideRandomButton();
-  const randIdx = random();
+  let randIdx;
+  if (isFirst && items.length === 10) {
+    randIdx = 9;
+  } else {
+    randIdx = random();
+  }
   const getSpinDegree = getSpin(randIdx);
   const wheel = $('wheel')[0];
   setWheelRotate(wheel, getSpinDegree);
@@ -79,9 +84,9 @@ function createSlide(index, angle, team) {
 }
 
 
-function showRandomButton() {
+function showRandomButton(isFirst) {
   $('#action-btn').show();
-  $('#action-btn').click(() => beginRandom());
+  $('#action-btn').click(() => beginRandom(isFirst));
 }
 
 function hideRandomButton() {
@@ -102,7 +107,7 @@ function hideResetButton() {
   $('#reset-btn').prop('onclick',null).off('click');
 }
 
-function initiate() {
+function initiate(isFirst = false) {
   const wheel = createWheel()
   console.log(items);
   const anglePerSlide = 360 / items.length
@@ -113,7 +118,7 @@ function initiate() {
   const machineEl = $('#root')[0];
   machineEl.appendChild(wheel);
   hideResetButton();
-  showRandomButton();
+  showRandomButton(isFirst);
   console.log(slides, items);
   // $('#action-btn')[0].addEventListener('click', beginRandom);
 }
@@ -131,5 +136,5 @@ function clear(removedIdx) {
 
 // Main code
 (() => {
-  initiate();
+  initiate(true);
 })()
