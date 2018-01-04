@@ -5,6 +5,7 @@ const storage = window.localStorage
 const saved = storage.getItem(LOCAL_STORAGE_KEY)
 
 let items;
+let slides = {};
 
 // if has save in localStorage
 if (saved) {
@@ -24,22 +25,19 @@ function random() {
   return Math.floor(Math.random() * ((items.length - 1) - 0 + 1)) + 0
 }
 
-const beginRandom = (idx) => {
-  hideButton();
-  $('#action-btn').prop('onclick',null).off('click');
-  const getRandIdx = random();
-  const getSpinDegree = getSpin(getRandIdx);
+const beginRandom = () => {
+  hideRandomButton();
+  const randIdx = random();
+  const getSpinDegree = getSpin(randIdx);
   const wheel = $('wheel')[0];
   setWheelRotate(wheel, getSpinDegree);
   $(wheel).bind(
     "transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd",
     function(){
-      showButton();
+      showResetButton(randIdx);
     }
   );
 }
-
-const slides = {};
 
 function getTargetDegree(index) {
   return slides[Object.keys(slides)[index]] 
@@ -81,16 +79,32 @@ function createSlide(index, angle, team) {
 }
 
 
-function showButton() {
-  $('#rand-button').show();
+function showRandomButton() {
+  $('#action-btn').show();
+  $('#action-btn').click(() => beginRandom());
 }
 
-function hideButton() {
-  $('#rand-button').hide();
+function hideRandomButton() {
+  $('#action-btn').hide();
+  $('#action-btn').prop('onclick',null).off('click');
+}
+
+function showResetButton(removeIdx) {
+  $('#reset-btn').show();
+  $('#reset-btn').click(() => {
+    clear(removeIdx);
+    initiate();
+  });
+}
+
+function hideResetButton() {
+  $('#reset-btn').hide();
+  $('#reset-btn').prop('onclick',null).off('click');
 }
 
 function initiate() {
   const wheel = createWheel()
+  console.log(items);
   const anglePerSlide = 360 / items.length
   items.forEach((item, index) => {
     const slide = createSlide(index, anglePerSlide, item)
@@ -98,18 +112,21 @@ function initiate() {
   })
   const machineEl = $('#root')[0];
   machineEl.appendChild(wheel);
-  $('#action-btn').click(() => beginRandom());
+  hideResetButton();
+  showRandomButton();
+  console.log(slides, items);
   // $('#action-btn')[0].addEventListener('click', beginRandom);
 }
 
 function clear(removedIdx) {
-  $('#action-btn')[0].removeEventListener('click', beginRandom);
   const root = $('#root')[0];
   root.removeChild(root.childNodes[0]);
+  console.log(removedIdx);
   items = [
     ...items.slice(0, removedIdx),
     ...items.slice(removedIdx + 1),
   ];
+  slides = {};
 }
 
 // Main code
