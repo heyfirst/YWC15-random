@@ -26,7 +26,6 @@ slide {
 }
 
 machine {
-  position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
@@ -83,4 +82,12 @@ wheel:nth-child(2) {
 
 wheel:nth-child(3) {
   transition-delay: 0.7s;
+}
+
+.button-container {
+  position: fixed;
+  bottom: 33%;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }

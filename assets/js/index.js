@@ -1,11 +1,10 @@
 const LOCAL_STORAGE_KEY = 'ywc-15-random'
 // Create Machine Element
-const machineEl = document.createElement('machine')
 
 const storage = window.localStorage
 const saved = storage.getItem(LOCAL_STORAGE_KEY)
 
-let items
+let items;
 
 // if has save in localStorage
 if (saved) {
@@ -14,12 +13,6 @@ if (saved) {
   items = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
   storage.setItem(LOCAL_STORAGE_KEY, items.join(','))
 }
-
-// Create wheel
-// Generate slides
-  // Set angle
-  // Set rotatation
-// Append element to body
 
 // create Wheel
 function createWheel() {
@@ -31,15 +24,19 @@ function random() {
   return Math.floor(Math.random() * ((items.length - 1) - 0 + 1)) + 0
 }
 
-function beginRandom() {
-  // const slideNodes = $('wheel')[0].children;
-  // for (let i = 0 ; i < slideNodes.length ; i += 1) {
-  //   console.log(slideNodes[i].getAttribute('data-deg'));
-
-  //   const style = `transform: rotateY(${degree}deg)
-  //   translateZ(80vmax);`;
-  //   slideNodes[i].setAttribute('style', style)
-  // }
+const beginRandom = (idx) => {
+  hideButton();
+  $('#action-btn').prop('onclick',null).off('click');
+  const getRandIdx = random();
+  const getSpinDegree = getSpin(getRandIdx);
+  const wheel = $('wheel')[0];
+  setWheelRotate(wheel, getSpinDegree);
+  $(wheel).bind(
+    "transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd",
+    function(){
+      showButton();
+    }
+  );
 }
 
 const slides = {};
@@ -48,17 +45,15 @@ function getTargetDegree(index) {
   return slides[Object.keys(slides)[index]] 
 }
 
-function getSpin() {
+function getSpin(idx) {
   const amountRounds = 3
   const degree = 360 * amountRounds
 
-  return degree + getTargetDegree(random())
+  return degree + getTargetDegree(idx)
 }
 
 function setWheelRotate(wheel, degree) {
-  const style = `transform: rotateY(${-degree}deg)
-  translateZ(-82vmax);`
-
+  const style = `transform: translateZ(-82vmax) rotateY(-${degree}deg)`;
   wheel.setAttribute('style', style)
 }
 
@@ -85,21 +80,39 @@ function createSlide(index, angle, team) {
   return slideEl
 }
 
-// Main code
-(() => {
-  const wheel = createWheel()
-  // console.log(random())
-  const anglePerSlide = 360 / items.length
 
+function showButton() {
+  $('#rand-button').show();
+}
+
+function hideButton() {
+  $('#rand-button').hide();
+}
+
+function initiate() {
+  const wheel = createWheel()
+  const anglePerSlide = 360 / items.length
   items.forEach((item, index) => {
     const slide = createSlide(index, anglePerSlide, item)
     wheel.appendChild(slide);
   })
+  const machineEl = $('#root')[0];
+  machineEl.appendChild(wheel);
+  $('#action-btn').click(() => beginRandom());
+  // $('#action-btn')[0].addEventListener('click', beginRandom);
+}
 
-  machineEl.appendChild(wheel)
+function clear(removedIdx) {
+  $('#action-btn')[0].removeEventListener('click', beginRandom);
+  const root = $('#root')[0];
+  root.removeChild(root.childNodes[0]);
+  items = [
+    ...items.slice(0, removedIdx),
+    ...items.slice(removedIdx + 1),
+  ];
+}
 
-  setWheelRotate(wheel, getSpin())
-
-  document.body.appendChild(machineEl)
-  document.body.addEventListener('click', beginRandom)
+// Main code
+(() => {
+  initiate();
 })()
