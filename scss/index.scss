@@ -67,7 +67,7 @@ wheel {
   min-height: 100vh;
   position: relative;
   transition: transform;
-  transition-duration: 12s;
+  // transition-duration: 10s;
   transform: translateZ(-82vmax) rotateY(0deg);
   transform-style: preserve-3d;
   transition-timing-function: cubic-bezier(0.2, -0.02, 0.29, 1.04);

@@ -12,7 +12,11 @@ if (saved) {
   items = saved.split(',');
 } else {
   items = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
-  storage.setItem(LOCAL_STORAGE_KEY, items.join(','))
+  updateStorage();
+}
+
+function updateStorage() {
+  storage.setItem(LOCAL_STORAGE_KEY, items.join(','));
 }
 
 // create Wheel
@@ -25,17 +29,45 @@ function random() {
   return Math.floor(Math.random() * ((items.length - 1) - 0 + 1)) + 0
 }
 
+function randomRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 const beginRandom = (isFirst = false) => {
   hideRandomButton();
   let randIdx;
+  console.log(items);
   if (isFirst && items.length === 10) {
     randIdx = 9;
   } else {
     randIdx = random();
   }
-  const getSpinDegree = getSpin(randIdx);
+  const getSpinDegree = getSpin(randIdx, false);
   const wheel = $('wheel')[0];
-  setWheelRotate(wheel, getSpinDegree);
+  setWheelRotate(wheel, -getSpinDegree);
+  let swapCount = 0;
+  const maximunCount = randomRange(3, 10);
+  let currentTransSpeed = 10;
+  setTransforSpeed(currentTransSpeed);
+  const interval = setInterval(() => {
+    const shouldReverse = randomRange(0, 5) >= 3;
+    if (shouldReverse) {
+      swapCount += 1;
+      currentTransSpeed += 1;
+      setTransforSpeed(currentTransSpeed);
+      const getNewDegree = getSpin(randIdx, swapCount % 2 === 1);
+      setWheelRotate(wheel, swapCount % 2 === 0 ? getNewDegree : -getNewDegree);
+    }
+    if (swapCount === maximunCount) {
+      clearInterval(interval);
+      currentTransSpeed += 5;
+      setTransforSpeed(currentTransSpeed);
+    }
+    if (currentTransSpeed > 16) {
+      setTransforSpeed(15);
+      currentTransSpeed = 15;
+    }
+  }, 1000);
   $(wheel).bind(
     "transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd",
     function(){
@@ -44,20 +76,26 @@ const beginRandom = (isFirst = false) => {
   );
 }
 
-function getTargetDegree(index) {
-  return slides[Object.keys(slides)[index]] 
+function setTransforSpeed(s) {
+  console.log($('wheel')[0]);
+  $('wheel').css('transition-duration', `${s}s`);
 }
 
-function getSpin(idx) {
-  const amountRounds = 3
+function getTargetDegree(index, isReverse) {
+  return isReverse ? - slides[Object.keys(slides)[index]] : 360 - slides[Object.keys(slides)[index]];
+}
+
+function getSpin(idx, isReverse) {
+  const amountRounds = randomRange(3 , 6);
   const degree = 360 * amountRounds
 
-  return degree + getTargetDegree(idx)
+  return isReverse ? degree : -degree + getTargetDegree(idx, isReverse);
 }
 
 function setWheelRotate(wheel, degree) {
-  const style = `transform: translateZ(-82vmax) rotateY(-${degree}deg)`;
-  wheel.setAttribute('style', style)
+  // const style = `transform: `;
+  // wheel.setAttribute('style', style)
+  $('wheel').css('transform', `translateZ(-82vmax) rotateY(${degree}deg)`);
 }
 
 // Create Slide
@@ -109,7 +147,6 @@ function hideResetButton() {
 
 function initiate(isFirst = false) {
   const wheel = createWheel()
-  console.log(items);
   const anglePerSlide = 360 / items.length
   items.forEach((item, index) => {
     const slide = createSlide(index, anglePerSlide, item)
@@ -119,18 +156,16 @@ function initiate(isFirst = false) {
   machineEl.appendChild(wheel);
   hideResetButton();
   showRandomButton(isFirst);
-  console.log(slides, items);
-  // $('#action-btn')[0].addEventListener('click', beginRandom);
 }
 
 function clear(removedIdx) {
   const root = $('#root')[0];
   root.removeChild(root.childNodes[0]);
-  console.log(removedIdx);
   items = [
     ...items.slice(0, removedIdx),
     ...items.slice(removedIdx + 1),
   ];
+  updateStorage();
   slides = {};
 }
 
