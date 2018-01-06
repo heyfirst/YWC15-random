@@ -36,7 +36,9 @@ function randomRange(min, max) {
 const beginRandom = (isFirst = false) => {
 
   let waitingSong = document.getElementById('audio-waiting')
-  waitingSong.pause()
+  setTimeout(function() {
+    waitingSong.pause()
+  },1000)
   let randomSong = document.getElementById('audio-random')
   randomSong.currentTime = 0
   randomSong.play()
@@ -54,8 +56,8 @@ const beginRandom = (isFirst = false) => {
   const wheel = $('wheel')[0];
   setWheelRotate(wheel, -getSpinDegree);
   let swapCount = 0;
-  const maximunCount = randomRange(3, 10);
-  let currentTransSpeed = 15;
+  const maximunCount = randomRange(6, 12);
+  let currentTransSpeed = 20;
   setTransforSpeed(currentTransSpeed);
 
   const interval = setInterval(() => {
@@ -81,12 +83,17 @@ const beginRandom = (isFirst = false) => {
   $(wheel).bind(
     "transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd",
     function(){
+      $('#audio-choosed')[0].play()
       console.log(randIdx)
       showResetButton(randIdx);
       console.log($('.team-'+ items[randIdx]))
 
       let randomSong = document.getElementById('audio-random')
-      randomSong.pause()
+      $('#audio-waiting')[0].currentTime = 0
+      $('#audio-waiting')[0].play()
+      setTimeout(function() {
+        randomSong.pause()
+      },1000)
       
     }
   );
@@ -163,9 +170,8 @@ function hideResetButton() {
 
 function initiate(isFirst = false) {
 
-  let waitingSong = document.getElementById('audio-waiting')
-  waitingSong.currentTime = 0
-  waitingSong.play()
+  $('#audio-waiting')[0].currentTime = 0
+  $('#audio-waiting')[0].play()
 
   const wheel = createWheel()
   const anglePerSlide = 360 / items.length
