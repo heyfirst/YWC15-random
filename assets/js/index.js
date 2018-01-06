@@ -11,7 +11,7 @@ let slides = {};
 if (saved) {
   items = saved.split(',');
 } else {
-  items = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+  items = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
   updateStorage();
 }
 
@@ -47,20 +47,20 @@ const beginRandom = (isFirst = false) => {
   setWheelRotate(wheel, -getSpinDegree);
   let swapCount = 0;
   const maximunCount = randomRange(3, 10);
-  let currentTransSpeed = 10;
+  let currentTransSpeed = 15;
   setTransforSpeed(currentTransSpeed);
   const interval = setInterval(() => {
-    const shouldReverse = randomRange(0, 5) >= 3;
-    if (shouldReverse) {
-      swapCount += 1;
-      currentTransSpeed += 1;
-      setTransforSpeed(currentTransSpeed);
-      const getNewDegree = getSpin(randIdx, swapCount % 2 === 1);
-      setWheelRotate(wheel, swapCount % 2 === 0 ? getNewDegree : -getNewDegree);
-    }
+    // const shouldReverse = randomRange(0, 5) >= 3;
+    // if (shouldReverse) {
+    //   swapCount += 1;
+    //   currentTransSpeed += 1;
+    //   setTransforSpeed(currentTransSpeed);
+    //   const getNewDegree = getSpin(randIdx, swapCount % 2 === 1);
+    //   setWheelRotate(wheel, swapCount % 2 === 0 ? getNewDegree : -getNewDegree);
+    // }
     if (swapCount === maximunCount) {
       clearInterval(interval);
-      currentTransSpeed += 5;
+      currentTransSpeed += 15;
       setTransforSpeed(currentTransSpeed);
     }
     if (currentTransSpeed > 16) {
@@ -82,7 +82,7 @@ function setTransforSpeed(s) {
 }
 
 function getTargetDegree(index, isReverse) {
-  return isReverse ? - slides[Object.keys(slides)[index]] : 360 - slides[Object.keys(slides)[index]];
+  return isReverse ? - slides[Object.keys(slides)[index]] : - 360 + slides[Object.keys(slides)[index]];
 }
 
 function getSpin(idx, isReverse) {
@@ -117,7 +117,7 @@ function createSlide(index, angle, team) {
   slideEl.setAttribute('data-deg', degree)
   slideEl.setAttribute('data-team', team)
   // Set slide text context
-  slideEl.textContent = team
+  slideEl.innerHTML = `<div><img class="team" src="./assets/img/${team}.png" /></div>`
   return slideEl
 }
 
