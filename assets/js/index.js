@@ -49,6 +49,7 @@ const beginRandom = (isFirst = false) => {
   const maximunCount = randomRange(3, 10);
   let currentTransSpeed = 15;
   setTransforSpeed(currentTransSpeed);
+
   const interval = setInterval(() => {
     // const shouldReverse = randomRange(0, 5) >= 3;
     // if (shouldReverse) {
@@ -68,10 +69,13 @@ const beginRandom = (isFirst = false) => {
       currentTransSpeed = 15;
     }
   }, 1000);
+  
   $(wheel).bind(
     "transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd",
     function(){
+      console.log(randIdx)
       showResetButton(randIdx);
+      console.log($('.team-'+ items[randIdx]))
     }
   );
 }
@@ -95,7 +99,7 @@ function getSpin(idx, isReverse) {
 function setWheelRotate(wheel, degree) {
   // const style = `transform: `;
   // wheel.setAttribute('style', style)
-  $('wheel').css('transform', `translateZ(-82vmax) rotateY(${degree}deg)`);
+  $('wheel').css('transform', `translateZ(-84vmax) rotateY(${degree}deg)`);
 }
 
 // Create Slide
@@ -117,7 +121,7 @@ function createSlide(index, angle, team) {
   slideEl.setAttribute('data-deg', degree)
   slideEl.setAttribute('data-team', team)
   // Set slide text context
-  slideEl.innerHTML = `<div><img class="team" src="./assets/img/${team}.png" /></div>`
+  slideEl.innerHTML = `<div><img class="team team-${team}" src="./assets/img/${team}.png" /></div>`
   return slideEl
 }
 
