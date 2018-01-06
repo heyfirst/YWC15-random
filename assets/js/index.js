@@ -34,7 +34,7 @@ function randomRange(min, max) {
 }
 
 const beginRandom = (isFirst = false) => {
-
+  // Song
   let waitingSong = document.getElementById('audio-waiting')
   setTimeout(function() {
     waitingSong.pause()
@@ -42,7 +42,12 @@ const beginRandom = (isFirst = false) => {
   let randomSong = document.getElementById('audio-random')
   randomSong.currentTime = 0
   randomSong.play()
-
+  // Speed UP!
+  $('.props-1').css('animation-duration', `20s`);
+  $('.props-2').css('animation-duration', `5s`);
+  $('.props-3').css('animation-duration', `20s`);
+  $('.props-3-inner').css('animation-duration', `7s`);
+  // ending
 
   hideRandomButton();
   let randIdx;
@@ -56,7 +61,7 @@ const beginRandom = (isFirst = false) => {
   const wheel = $('wheel')[0];
   setWheelRotate(wheel, -getSpinDegree);
   let swapCount = 0;
-  const maximunCount = randomRange(6, 12);
+  const maximunCount = randomRange(7, 15);
   let currentTransSpeed = 20;
   setTransforSpeed(currentTransSpeed);
 
@@ -84,9 +89,7 @@ const beginRandom = (isFirst = false) => {
     "transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd",
     function(){
       $('#audio-choosed')[0].play()
-      console.log(randIdx)
       showResetButton(randIdx);
-      console.log($('.team-'+ items[randIdx]))
 
       let randomSong = document.getElementById('audio-random')
       $('#audio-waiting')[0].currentTime = 0
@@ -94,6 +97,13 @@ const beginRandom = (isFirst = false) => {
       setTimeout(function() {
         randomSong.pause()
       },1000)
+
+      // Speed Down!
+      $('.props-1').css('animation-duration', `50s`);
+      $('.props-2').css('animation-duration', `10s`);
+      $('.props-3').css('animation-duration', `50s`);
+      $('.props-3-inner').css('animation-duration', `20s`);
+      // ending
       
     }
   );
@@ -172,6 +182,10 @@ function initiate(isFirst = false) {
 
   $('#audio-waiting')[0].currentTime = 0
   $('#audio-waiting')[0].play()
+  $('#audio-waiting')[0].addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+}, false);
 
   const wheel = createWheel()
   const anglePerSlide = 360 / items.length

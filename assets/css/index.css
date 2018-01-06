@@ -82,6 +82,17 @@ wheel:nth-child(3) {
   transform: translateY(-12vh);
 }
 
+.foreground {
+  background: url("../img/effect-light.png");
+  height: 100%;
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 .ywc-logo {
   background: url("../img/ywc-logo.png");
   height: 85px;
@@ -100,6 +111,7 @@ wheel:nth-child(3) {
   width: 825px;
   height: 825px;
   animation: rotateCounterClockwise 50s infinite linear;
+  transition: all 2s;
 }
 
 .props-2 {
@@ -107,6 +119,7 @@ wheel:nth-child(3) {
   width: 570px;
   height: 570px;
   animation: rotateClockwise 10s infinite linear;
+  transition: all 2s;
 }
 
 .props-3 {
@@ -116,6 +129,7 @@ wheel:nth-child(3) {
   top: -150px;
   right: 310px;
   animation: rotateClockwise 50s infinite linear;
+  transition: all 2s;
 }
 
 .props-3-inner {
@@ -123,6 +137,7 @@ wheel:nth-child(3) {
   width: 560px;
   height: 560px;
   animation: rotateCounterClockwise 20s infinite linear;
+  transition: all 2s;
 }
 
 .props-3-inner,
@@ -164,6 +179,7 @@ wheel:nth-child(3) {
 }
 
 .button-container button {
+  z-index: 101;
   background: rgba(0, 0, 0, 0.5);
   color: white;
   padding: 10px 20px;
