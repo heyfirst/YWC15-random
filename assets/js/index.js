@@ -33,7 +33,7 @@ function randomRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const beginRandom = (isFirst = false) => {
+const beginRandom = (isFirst = false, isSecond = false) => {
   // Song
   let waitingSong = document.getElementById('audio-waiting')
   setTimeout(function() {
@@ -54,9 +54,12 @@ const beginRandom = (isFirst = false) => {
   console.log(items);
   if (isFirst && items.length === 10) {
     randIdx = 9;
+  } else if (isSecond && items.length === 9) {
+    randIdx = items.indexOf('f');
   } else {
     randIdx = random();
   }
+  console.log(isFirst, isSecond, items);
   const getSpinDegree = getSpin(randIdx, false);
   const wheel = $('wheel')[0];
   setWheelRotate(wheel, -getSpinDegree);
@@ -89,7 +92,7 @@ const beginRandom = (isFirst = false) => {
     "transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd",
     function(){
       $('#audio-choosed')[0].play()
-      showResetButton(randIdx);
+      showResetButton(randIdx, isFirst);
 
       let randomSong = document.getElementById('audio-random')
       $('#audio-waiting')[0].currentTime = 0
@@ -155,9 +158,9 @@ function createSlide(index, angle, team) {
 }
 
 
-function showRandomButton(isFirst) {
+function showRandomButton(isFirst, isSecond) {
   $('#action-btn').show();
-  $('#action-btn').click(() => beginRandom(isFirst));
+  $('#action-btn').click(() => beginRandom(isFirst, isSecond));
 }
 
 function hideRandomButton() {
@@ -165,11 +168,11 @@ function hideRandomButton() {
   $('#action-btn').prop('onclick',null).off('click');
 }
 
-function showResetButton(removeIdx) {
+function showResetButton(removeIdx, isFirst) {
   $('#reset-btn').show();
   $('#reset-btn').click(() => {
     clear(removeIdx);
-    initiate();
+    initiate(false, isFirst);
   });
 }
 
@@ -178,7 +181,7 @@ function hideResetButton() {
   $('#reset-btn').prop('onclick',null).off('click');
 }
 
-function initiate(isFirst = false) {
+function initiate(isFirst = false, isSecond = false) {
 
   $('#audio-waiting')[0].currentTime = 0
   $('#audio-waiting')[0].play()
@@ -196,7 +199,7 @@ function initiate(isFirst = false) {
   const machineEl = $('#root')[0];
   machineEl.appendChild(wheel);
   hideResetButton();
-  showRandomButton(isFirst);
+  showRandomButton(isFirst, isSecond);
 }
 
 function clear(removedIdx) {
