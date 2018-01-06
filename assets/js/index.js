@@ -206,6 +206,7 @@ function clear(removedIdx) {
     ...items.slice(0, removedIdx),
     ...items.slice(removedIdx + 1),
   ];
+  items = shuffle(items)
   updateStorage();
   slides = {};
 }
@@ -214,3 +215,12 @@ function clear(removedIdx) {
 (() => {
   initiate(true);
 })()
+
+// the modern version of the Fisher–Yates shuffle algorithm:
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
