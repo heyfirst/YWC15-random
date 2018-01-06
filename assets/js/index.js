@@ -34,6 +34,14 @@ function randomRange(min, max) {
 }
 
 const beginRandom = (isFirst = false) => {
+
+  let waitingSong = document.getElementById('audio-waiting')
+  waitingSong.pause()
+  let randomSong = document.getElementById('audio-random')
+  randomSong.currentTime = 0
+  randomSong.play()
+
+
   hideRandomButton();
   let randIdx;
   console.log(items);
@@ -76,6 +84,10 @@ const beginRandom = (isFirst = false) => {
       console.log(randIdx)
       showResetButton(randIdx);
       console.log($('.team-'+ items[randIdx]))
+
+      let randomSong = document.getElementById('audio-random')
+      randomSong.pause()
+      
     }
   );
 }
@@ -150,6 +162,11 @@ function hideResetButton() {
 }
 
 function initiate(isFirst = false) {
+
+  let waitingSong = document.getElementById('audio-waiting')
+  waitingSong.currentTime = 0
+  waitingSong.play()
+
   const wheel = createWheel()
   const anglePerSlide = 360 / items.length
   items.forEach((item, index) => {
