@@ -35,11 +35,11 @@ function randomRange(min, max) {
 
 const beginRandom = (isFirst = false, isSecond = false) => {
   // Song
-  let waitingSong = document.getElementById('audio-waiting')
-  setTimeout(function() {
-    waitingSong.pause()
-  },1000)
-  let randomSong = document.getElementById('audio-random')
+  // let waitingSong = document.getElementById('audio-waiting')
+  // setTimeout(function() {
+  //   waitingSong.pause()
+  // },1000)
+  let randomSong = document.getElementById('audio-baby-shark')
   randomSong.currentTime = 0
   randomSong.play()
   // Speed UP!
@@ -98,12 +98,12 @@ const beginRandom = (isFirst = false, isSecond = false) => {
       $('#audio-choosed')[0].play()
       showResetButton(randIdx, isFirst);
 
-      let randomSong = document.getElementById('audio-random')
-      $('#audio-waiting')[0].currentTime = 0
-      $('#audio-waiting')[0].play()
-      setTimeout(function() {
-        randomSong.pause()
-      },1000)
+      // let randomSong = document.getElementById('audio-random')
+      // $('#audio-waiting')[0].currentTime = 0
+      // $('#audio-waiting')[0].play()
+      // setTimeout(function() {
+      //   randomSong.pause()
+      // },1000)
 
       // Speed Down!
       $('.props-1').css('animation-duration', `50s`);
@@ -187,12 +187,12 @@ function hideResetButton() {
 
 function initiate(isFirst = false, isSecond = false) {
 
-  $('#audio-waiting')[0].currentTime = 0
-  $('#audio-waiting')[0].play()
-  $('#audio-waiting')[0].addEventListener('ended', function() {
-    this.currentTime = 0;
-    this.play();
-}, false);
+//   $('#audio-waiting')[0].currentTime = 0
+//   $('#audio-waiting')[0].play()
+//   $('#audio-waiting')[0].addEventListener('ended', function() {
+//     this.currentTime = 0;
+//     this.play();
+// }, false);
 
   const wheel = createWheel()
   const anglePerSlide = 360 / items.length
