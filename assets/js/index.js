@@ -65,7 +65,7 @@ const beginRandom = (isFirst = false, isSecond = false) => {
   setWheelRotate(wheel, -getSpinDegree);
   let swapCount = 0;
   const maximunCount = randomRange(7, 15);
-  let currentTransSpeed = 20;
+  let currentTransSpeed = 15;
   setTransforSpeed(currentTransSpeed);
 
   const interval = setInterval(() => {
@@ -77,15 +77,19 @@ const beginRandom = (isFirst = false, isSecond = false) => {
     //   const getNewDegree = getSpin(randIdx, swapCount % 2 === 1);
     //   setWheelRotate(wheel, swapCount % 2 === 0 ? getNewDegree : -getNewDegree);
     // }
-    if (swapCount === maximunCount) {
-      clearInterval(interval);
-      currentTransSpeed += 15;
-      setTransforSpeed(currentTransSpeed);
-    }
-    if (currentTransSpeed > 16) {
-      setTransforSpeed(15);
+    // if (swapCount === maximunCount) {
+    //   clearInterval(interval);
+    //   currentTransSpeed += 15;
+    //   setTransforSpeed(currentTransSpeed);
+    // }
+    if (currentTransSpeed >= 15) {
       currentTransSpeed = 15;
+      clearInterval(interval);
+    } else {
+      currentTransSpeed += 2;
     }
+    setTransforSpeed(currentTransSpeed);
+    console.log(currentTransSpeed);
   }, 1000);
   
   $(wheel).bind(
@@ -122,7 +126,7 @@ function getTargetDegree(index, isReverse) {
 }
 
 function getSpin(idx, isReverse) {
-  const amountRounds = randomRange(3 , 6);
+  const amountRounds = randomRange(100 , 120);
   const degree = 360 * amountRounds
 
   return isReverse ? degree : -degree + getTargetDegree(idx, isReverse);
