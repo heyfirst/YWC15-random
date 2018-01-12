@@ -51,12 +51,6 @@ const beginRandom = (isFirst = false) => {
 
   hideRandomButton();
   let randIdx;
-  console.log(items);
-  if (isFirst && items.length === 10) {
-    randIdx = 9;
-  } else {
-    randIdx = random();
-  }
   const getSpinDegree = getSpin(randIdx, false);
   const wheel = $('wheel')[0];
   setWheelRotate(wheel, -getSpinDegree);
