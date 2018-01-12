@@ -33,13 +33,13 @@ function randomRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const beginRandom = (isFirst = false) => {
+const beginRandom = (isFirst = false, isSecond = false) => {
   // Song
-  let waitingSong = document.getElementById('audio-waiting')
-  setTimeout(function() {
-    waitingSong.pause()
-  },1000)
-  let randomSong = document.getElementById('audio-random')
+  // let waitingSong = document.getElementById('audio-waiting')
+  // setTimeout(function() {
+  //   waitingSong.pause()
+  // },1000)
+  let randomSong = document.getElementById('audio-baby-shark')
   randomSong.currentTime = 0
   randomSong.play()
   // Speed UP!
@@ -56,7 +56,7 @@ const beginRandom = (isFirst = false) => {
   setWheelRotate(wheel, -getSpinDegree);
   let swapCount = 0;
   const maximunCount = randomRange(7, 15);
-  let currentTransSpeed = 20;
+  let currentTransSpeed = 15;
   setTransforSpeed(currentTransSpeed);
 
   const interval = setInterval(() => {
@@ -68,29 +68,33 @@ const beginRandom = (isFirst = false) => {
     //   const getNewDegree = getSpin(randIdx, swapCount % 2 === 1);
     //   setWheelRotate(wheel, swapCount % 2 === 0 ? getNewDegree : -getNewDegree);
     // }
-    if (swapCount === maximunCount) {
-      clearInterval(interval);
-      currentTransSpeed += 15;
-      setTransforSpeed(currentTransSpeed);
-    }
-    if (currentTransSpeed > 16) {
-      setTransforSpeed(15);
+    // if (swapCount === maximunCount) {
+    //   clearInterval(interval);
+    //   currentTransSpeed += 15;
+    //   setTransforSpeed(currentTransSpeed);
+    // }
+    if (currentTransSpeed >= 15) {
       currentTransSpeed = 15;
+      clearInterval(interval);
+    } else {
+      currentTransSpeed += 2;
     }
+    setTransforSpeed(currentTransSpeed);
+    console.log(currentTransSpeed);
   }, 1000);
   
   $(wheel).bind(
     "transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd",
     function(){
       $('#audio-choosed')[0].play()
-      showResetButton(randIdx);
+      showResetButton(randIdx, isFirst);
 
-      let randomSong = document.getElementById('audio-random')
-      $('#audio-waiting')[0].currentTime = 0
-      $('#audio-waiting')[0].play()
-      setTimeout(function() {
-        randomSong.pause()
-      },1000)
+      // let randomSong = document.getElementById('audio-random')
+      // $('#audio-waiting')[0].currentTime = 0
+      // $('#audio-waiting')[0].play()
+      // setTimeout(function() {
+      //   randomSong.pause()
+      // },1000)
 
       // Speed Down!
       $('.props-1').css('animation-duration', `50s`);
@@ -113,7 +117,7 @@ function getTargetDegree(index, isReverse) {
 }
 
 function getSpin(idx, isReverse) {
-  const amountRounds = randomRange(3 , 6);
+  const amountRounds = randomRange(100 , 120);
   const degree = 360 * amountRounds
 
   return isReverse ? degree : -degree + getTargetDegree(idx, isReverse);
@@ -149,9 +153,9 @@ function createSlide(index, angle, team) {
 }
 
 
-function showRandomButton(isFirst) {
+function showRandomButton(isFirst, isSecond) {
   $('#action-btn').show();
-  $('#action-btn').click(() => beginRandom(isFirst));
+  $('#action-btn').click(() => beginRandom(isFirst, isSecond));
 }
 
 function hideRandomButton() {
@@ -159,11 +163,11 @@ function hideRandomButton() {
   $('#action-btn').prop('onclick',null).off('click');
 }
 
-function showResetButton(removeIdx) {
+function showResetButton(removeIdx, isFirst) {
   $('#reset-btn').show();
   $('#reset-btn').click(() => {
     clear(removeIdx);
-    initiate();
+    initiate(false, isFirst);
   });
 }
 
@@ -172,14 +176,14 @@ function hideResetButton() {
   $('#reset-btn').prop('onclick',null).off('click');
 }
 
-function initiate(isFirst = false) {
+function initiate(isFirst = false, isSecond = false) {
 
-  $('#audio-waiting')[0].currentTime = 0
-  $('#audio-waiting')[0].play()
-  $('#audio-waiting')[0].addEventListener('ended', function() {
-    this.currentTime = 0;
-    this.play();
-}, false);
+//   $('#audio-waiting')[0].currentTime = 0
+//   $('#audio-waiting')[0].play()
+//   $('#audio-waiting')[0].addEventListener('ended', function() {
+//     this.currentTime = 0;
+//     this.play();
+// }, false);
 
   const wheel = createWheel()
   const anglePerSlide = 360 / items.length
@@ -190,7 +194,7 @@ function initiate(isFirst = false) {
   const machineEl = $('#root')[0];
   machineEl.appendChild(wheel);
   hideResetButton();
-  showRandomButton(isFirst);
+  showRandomButton(isFirst, isSecond);
 }
 
 function clear(removedIdx) {
